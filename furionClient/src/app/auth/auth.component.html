@@ -1,0 +1,70 @@
+
+
+<div class="container-fluid auth-container">
+    <div class="row align-items-end">
+        <div class="col-md-3 offset-sm-2">
+            <mat-card class="card">
+                <mat-card-content>
+                    <!-- <mat-tab-group animationDuration="0ms" (selectedTabChange)="tabClick($event)"> -->
+                    <mat-tab-group animationDuration="0ms"> 
+                        <mat-tab label="Login">
+                            <form [formGroup]="loginForm" (ngSubmit)="userLogin()">
+                                <div class="container">
+                                    <mat-form-field class="first-field" appearance="outline">
+                                        <mat-label>Enter your email</mat-label>
+                                        <input matInput placeholder="pat@example.com" formControlName="email" required>
+                                        <mat-error *ngIf="loginForm.controls['email'].invalid">{{getEmailErrorMessage()}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Enter your password</mat-label>
+                                        <input matInput formControlName="password" minlength="8" [type]="hidePassword ? 'password' : 'text'">
+                                        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                          <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                        </button>
+                                        <mat-error *ngIf="loginForm.controls['password'].invalid">{{getPassWordErrorMessage()}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="container">
+                                    <div class="col-md-12 text-center">
+                                        <!-- <button mat-raised-button (click)="userLogin()" color="warn">Login</button> -->
+                                        <button mat-raised-button type="submit" color="warn" [disabled]="loginForm.controls['password'].invalid || loginForm.controls['email'].invalid">Login</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-tab>
+                        <mat-tab label="Register">
+                            <form [formGroup]="loginForm" (ngSubmit)="userRegister()">
+                                <div class="container">
+                                    <mat-form-field class="first-field" appearance="outline">
+                                        <mat-label>Enter your email</mat-label>
+                                        <input matInput placeholder="pat@example.com" formControlName="email" required>
+                                        <mat-error *ngIf="loginForm.controls['email'].invalid">{{getEmailErrorMessage()}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field hintLabel="Max 9 characters" appearance="outline">
+                                        <mat-label>Enter Steam32ID</mat-label>
+                                        <input matInput formControlName="steam32ID" maxlength="9" placeholder="Ex. 123456789">
+                                        <mat-hint align="end">{{loginForm.controls['steam32ID'].value?.length || 0}}/9</mat-hint>
+                                        <mat-error *ngIf="loginForm.controls['steam32ID'].invalid">{{getSteamIDErrorMessage()}}</mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Enter your password</mat-label>
+                                        <input matInput formControlName="password" minlength="8" [type]="hidePassword ? 'password' : 'text'">
+                                        <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
+                                            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                                        </button>
+                                        <mat-error *ngIf="loginForm.controls['password'].invalid">{{getPassWordErrorMessage()}}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="container">
+                                    <div class="col-md-12 text-center">
+                                        <button mat-raised-button type="submit" [disabled]="!loginForm.valid" color="warn">Register</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </mat-tab>
+                    </mat-tab-group>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>
