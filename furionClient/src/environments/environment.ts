@@ -7,6 +7,7 @@ import { config } from './configSecrets'
 export const environment = {
   production: false,
   usersApiUrl: config.usersApiUrl,
+  dotaApiUrl: config.dotaApiUrl,
   firebase: config.firebase
 };
 

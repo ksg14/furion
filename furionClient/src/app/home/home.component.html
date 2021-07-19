@@ -1,1 +1,146 @@
-<p>home works!</p>
+
+<div class="container-fluid">
+    <div class="row" id="player-summary">
+            <div class="col-md-2 ">
+                <mat-spinner *ngIf="playerDetails == undefined"></mat-spinner>
+                <mat-card *ngIf="playerDetails !== undefined">
+                    <img mat-card-image src="{{playerDetails.profilePic}}" alt="Steam Profile Photo">
+                    <mat-card-content>
+                      <h1 id="alias-card">
+                        {{playerDetails.alias}}
+                      </h1>
+                    </mat-card-content>
+                  </mat-card>
+            </div>
+
+            <div class="col-md-2 ">
+                <mat-spinner *ngIf="winLossData == undefined"></mat-spinner>
+                <mat-card *ngIf="winLossData !== undefined">
+                    <div class="container">
+                        <h1>
+                            Win/Loss
+                        </h1>
+                    </div>
+                    <ngx-charts-pie-grid class="pie-chart"
+                        [view]="winLossView"
+                        [scheme]="winLossColorScheme"
+                        [results]="winLossData">
+                    </ngx-charts-pie-grid>
+                </mat-card>
+            </div>
+
+            <div class="col-md-2 ">
+                <mat-spinner *ngIf="playerDetails == undefined"></mat-spinner>
+                <mat-card *ngIf="playerDetails !== undefined">
+                    <div id="mmr-card">
+                        <mat-card-content>
+                            <h1>
+                                MMR:
+                                <br>
+                                {{playerDetails.mmrEstimate}}
+                                <br>
+                                <hr>
+                                Rank:
+                                <br>
+                                {{playerDetails.rankStr}}
+                                <hr>
+                            </h1>
+                        </mat-card-content>
+                    </div>
+                </mat-card>
+            </div>
+
+            <div class="col-md-3 ">
+                <mat-spinner *ngIf="laneWinsData == undefined"></mat-spinner>
+                <mat-card *ngIf="laneWinsData !== undefined">
+                    <div class="container">
+                        <h1>
+                            Lane Wins
+                        </h1>
+                    </div>
+                    <ngx-charts-pie-grid class="pie-chart"
+                        [view]="laneWinsView"
+                        [scheme]="laneWinsColorScheme"
+                        [results]="laneWinsData">
+                    </ngx-charts-pie-grid>
+                </mat-card>
+            </div>
+
+            <div class="col-md-3">
+                <mat-spinner *ngIf="laneGamesData == undefined"></mat-spinner>
+                <mat-card *ngIf="laneGamesData !== undefined">
+                    <div class="container">
+                        <h1>
+                            Lane Games
+                        </h1>
+                    </div>
+                    <ngx-charts-pie-grid class="pie-chart"
+                        [view]="laneGamesView"
+                        [scheme]="laneGamesColorScheme"
+                        [results]="laneGamesData">
+                    </ngx-charts-pie-grid>
+                </mat-card>
+            </div>
+    </div>
+
+    <div class="row" id="match-summary-row">
+        <div class="col-md-12" id="match-summary-div">
+            <mat-spinner *ngIf="matchDetails == undefined"></mat-spinner>
+            <div *ngIf="matchDetails !== undefined">
+                <div style="margin: 10px;" *ngFor="let match of matchDetails; let matchIndex=index;">
+                    <mat-card id="match-card" >
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="match-div"> 
+                                    <h3>
+                                        Match :<br>{{matchIndex + 1}}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="match-div"> 
+                                    <h3>
+                                        Side:<br>{{match.side}}<br><hr>Win:<br>{{match.win}}<hr>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="match-div"> 
+                                    <h3>
+                                        Hero:<br>{{match.hero}}<br><hr>
+                                        Duration:<br>{{convertToMinutes(match.duration)}} minutes<hr>
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="match-div"> 
+                                    <h3>
+                                        Kills:<br>{{match.kills}}<br><hr>Deaths:<br>{{match.deaths}}<hr>
+                                        Assists:<br>{{match.assists}}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="match-div"> 
+                                    <h3>
+                                        XPM:<br>{{match.xpm}}<br><hr>GPM:<br>{{match.gpm}}<hr>
+                                        Last Hits:<br>{{match.lastHits}}
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="match-div"> 
+                                    <h3>
+                                        HeroDamage:<br>{{match.heroDamage}}<br>
+                                        <hr>TowerDamage:<br>{{match.towerDamage}}<hr>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                    <span>&nbsp;</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

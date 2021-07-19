@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from '@angular/fire'
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { UserAuthService } from './user-auth.service';
-import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth.guard';
 import { environment } from '../environments/environment'
+import { GameInfoService } from './game-info.service';
 
 @NgModule({
   declarations: [
@@ -28,11 +30,13 @@ import { environment } from '../environments/environment'
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AngularFireModule.initializeApp (environment.firebase)
+    AngularFireModule.initializeApp (environment.firebase),
+    NgxChartsModule
   ],
   providers: [
     UserAuthService,
-    AuthGuard
+    AuthGuard,
+    GameInfoService
   ],
   bootstrap: [AppComponent]
 })

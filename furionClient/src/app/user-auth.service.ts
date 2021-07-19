@@ -11,12 +11,10 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class UserAuthService {
 
-  private userAuthUrl!: string;
+  private userAuthUrl: string = environment.usersApiUrl;;
   private isAuthenticated: boolean = false;
 
-  constructor(private http: HttpClient, private firebaseAuth: AngularFireAuth) {
-    this.userAuthUrl = environment.usersApiUrl;
-  }
+  constructor(private http: HttpClient, private firebaseAuth: AngularFireAuth) {}
 
   public async loginUserOnFirebase (email: string, password: string): Promise<ServiceStatus> {
     try {

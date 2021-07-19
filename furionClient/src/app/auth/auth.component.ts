@@ -87,7 +87,7 @@ export class AuthComponent implements OnInit {
     this.userService.saveUserOnDB (this.loginForm.value)
         .subscribe (async res => {
           console.log (`register response ${res.status}`);
-          console.log (`register response ${res.body}`);
+          console.log (res.body);
 
           if (!this.isErrorStatus (res.status)) {
             const firebaseResponse = await this.userService.registerUserOnFirebase (this.loginForm.controls ['email'].value, 
@@ -116,7 +116,7 @@ export class AuthComponent implements OnInit {
     this.userService.isExistingUserOnDB (this.loginForm.controls ['email'].value)
         .subscribe (async res => {
           console.log (`login response ${res.status}`);
-          console.log (`login response ${res.body}`);
+          console.log (res.body);
 
           if (!this.isErrorStatus (res.status) && res.body) {
             const firebaseResponse = await this.userService.loginUserOnFirebase (this.loginForm.controls ['email'].value, 
