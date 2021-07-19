@@ -1,6 +1,9 @@
 # assets
 assets/
 
+# secrets
+src/environments/configSecrets.ts
+
 # compiled output
 /dist
 /tmp

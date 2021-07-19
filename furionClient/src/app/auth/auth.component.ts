@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { AppRoutingModule } from '../app-routing.module';
+import { Router } from '@angular/router';
 import { UserAuthService } from '../user-auth.service';
 
 @Component({
@@ -21,11 +21,12 @@ export class AuthComponent implements OnInit {
   hidePassword : boolean = true;
 
   constructor(private userService: UserAuthService, 
-    private router: AppRoutingModule,
+    private router: Router,
     private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
+    // TODO if local storage has email then navigate to home
   }
 
   getEmailErrorMessage() {
@@ -67,26 +68,41 @@ export class AuthComponent implements OnInit {
     this.snackBar.open (message, action);
   }
 
-  hasFailed (responseStatus: number, action: string): boolean {
-    responseStatus /= 100;
+  isErrorStatus (responseStatus: number): boolean {
+    responseStatus = Math.floor (responseStatus / 100);
 
-    if (responseStatus == 4 || responseStatus == 5) {
-      this.openSnackBar (`Failure : ${action}`, 'Close');
-      return true;
-    }
+    if (responseStatus != 2)
+      return true
     return false;
+  }
+
+  navigateToHome () {
+    this.router.navigateByUrl('/home');
   }
 
   userRegister () {
     console.log ('register');
     console.log (this.loginForm.value);
 
-    this.userService.saveUser (this.loginForm.value)
-        .subscribe (res => {
+    this.userService.saveUserOnDB (this.loginForm.value)
+        .subscribe (async res => {
           console.log (`register response ${res.status}`);
           console.log (`register response ${res.body}`);
 
-          this.hasFailed (res.status, 'Registration');
+          if (!this.isErrorStatus (res.status)) {
+            const firebaseResponse = await this.userService.registerUserOnFirebase (this.loginForm.controls ['email'].value, 
+                                                      this.loginForm.controls ['password'].value);
+            if (firebaseResponse.status) {
+              this.navigateToHome ();
+            }
+            else {
+              this.openSnackBar (`Failure : Firebase Registration`, 'Close');
+              // TODO remove user from mongoDB on firebase failure
+            }
+          }
+          else {
+            this.openSnackBar (`Failure : Mongo Registration`, 'Close');
+          }
         },
         err => {
           this.openSnackBar (`${err.statusText}, StatusCode : ${err.status}`, 'Close');
@@ -97,12 +113,24 @@ export class AuthComponent implements OnInit {
     console.log ('login');
     console.log (this.loginForm.value);
 
-    this.userService.isExistingUser (this.loginForm.controls ['email'].value)
-        .subscribe (res => {
+    this.userService.isExistingUserOnDB (this.loginForm.controls ['email'].value)
+        .subscribe (async res => {
           console.log (`login response ${res.status}`);
           console.log (`login response ${res.body}`);
 
-          this.hasFailed (res.status, 'Login');
+          if (!this.isErrorStatus (res.status) && res.body) {
+            const firebaseResponse = await this.userService.loginUserOnFirebase (this.loginForm.controls ['email'].value, 
+                                                      this.loginForm.controls ['password'].value);
+            if (firebaseResponse.status) {
+              this.navigateToHome ();
+            }
+            else {
+              this.openSnackBar (`Failure : Firebase Login`, 'Close');
+            }
+          }
+          else {
+            this.openSnackBar (`Failure : Mongo Login`, 'Close');
+          }
         },
         err => {
           this.openSnackBar (`${err.statusText}, StatusCode : ${err.status}`, 'Close');
