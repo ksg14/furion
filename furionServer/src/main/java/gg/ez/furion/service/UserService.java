@@ -5,6 +5,7 @@ import gg.ez.furion.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -26,26 +27,24 @@ public class UserService {
 
     public void updateUser (User user) {
         User existingUser = this.userRepo.findById(user.getId())
-                .orElseThrow( () -> new RuntimeException(
+                .orElseThrow( () -> new NoSuchElementException(
                         String.format("Could not find User id %s", user.getId())
                 ));
-
         existingUser.setEmail(user.getEmail());
         existingUser.setSteam32ID(user.getSteam32ID());
-
         this.userRepo.save (existingUser);
     }
 
     public User getUser (String id) {
         return this.userRepo.findById(id)
-                .orElseThrow( () -> new RuntimeException(
+                .orElseThrow( () -> new NoSuchElementException(
                         String.format("Could not find User id %s", id)
                 ));
     }
 
     public User getUserByEmail (String email) {
         return this.userRepo.findByEmail(email)
-                .orElseThrow( () -> new RuntimeException(
+                .orElseThrow( () -> new NoSuchElementException(
                         String.format("Could not find User email %s", email)
                 ));
     }
