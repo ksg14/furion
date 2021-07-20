@@ -1,0 +1,22 @@
+.spacer {
+    flex: 1 1 auto;
+}
+
+#navBar {
+    color: white;
+    background: transparent;
+}
+
+#bannerText {
+    margin-left: 40px;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+button {
+    margin: auto;
+    margin-right: 40px;
+    text-align: center;
+}

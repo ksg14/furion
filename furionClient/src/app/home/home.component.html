@@ -1,7 +1,7 @@
 
 <div class="container-fluid">
     <div class="row" id="player-summary">
-            <div class="col-md-2 ">
+            <div class="col-md-2">
                 <mat-spinner *ngIf="playerDetails == undefined"></mat-spinner>
                 <mat-card *ngIf="playerDetails !== undefined">
                     <img mat-card-image src="{{playerDetails.profilePic}}" alt="Steam Profile Photo">
@@ -83,64 +83,77 @@
             </div>
     </div>
 
-    <div class="row" id="match-summary-row">
-        <div class="col-md-12" id="match-summary-div">
-            <mat-spinner *ngIf="matchDetails == undefined"></mat-spinner>
-            <div *ngIf="matchDetails !== undefined">
-                <div style="margin: 10px;" *ngFor="let match of matchDetails; let matchIndex=index;">
-                    <mat-card id="match-card" >
-                        <div class="row">
-                            <div class="col-md-2">
-                                <div class="match-div"> 
-                                    <h3>
-                                        Match :<br>{{matchIndex + 1}}
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="match-div"> 
-                                    <h3>
-                                        Side:<br>{{match.side}}<br><hr>Win:<br>{{match.win}}<hr>
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="match-div"> 
-                                    <h3>
-                                        Hero:<br>{{match.hero}}<br><hr>
-                                        Duration:<br>{{convertToMinutes(match.duration)}} minutes<hr>
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="match-div"> 
-                                    <h3>
-                                        Kills:<br>{{match.kills}}<br><hr>Deaths:<br>{{match.deaths}}<hr>
-                                        Assists:<br>{{match.assists}}
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="match-div"> 
-                                    <h3>
-                                        XPM:<br>{{match.xpm}}<br><hr>GPM:<br>{{match.gpm}}<hr>
-                                        Last Hits:<br>{{match.lastHits}}
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="match-div"> 
-                                    <h3>
-                                        HeroDamage:<br>{{match.heroDamage}}<br>
-                                        <hr>TowerDamage:<br>{{match.towerDamage}}<hr>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </mat-card>
-                    <span>&nbsp;</span>
-                </div>
-            </div>
+    <div class="row header-row">
+        <div class="col-md-12">
+            <span class="header-span">
+                Recent Matches
+            </span>
         </div>
     </div>
+
+    <div class="row" class="match-summary-row">
+        <div class="col-md-12" class="match-summary-div">
+            <mat-spinner *ngIf="matchDetails == undefined"></mat-spinner>
+            <ngb-carousel *ngIf="matchDetails">
+                <ng-template ngbSlide *ngFor="let match of matchDetails; let matchIndex=index;">
+                    <div>
+                        <mat-card class="match-card" >
+                            <div class="row">
+                                <div class="col-md-2 offset-md-1">
+                                    <div class="match-div"> 
+                                        <h3>
+                                            Match : {{matchIndex + 1}}<br><hr>Side:<br>{{match.side}}<br>
+                                            <hr>Win:<br>{{match.win}}<hr>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="match-div"> 
+                                        <h3>
+                                            Hero:<br>{{match.hero}}<br><hr>
+                                            Duration:<br>{{convertToMinutes(match.duration)}} minutes<hr>
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="match-div"> 
+                                        <h3>
+                                            Kills:<br>{{match.kills}}<br><hr>Deaths:<br>{{match.deaths}}<hr>
+                                            Assists:<br>{{match.assists}}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="match-div"> 
+                                        <h3>
+                                            XPM:<br>{{match.xpm}}<br><hr>GPM:<br>{{match.gpm}}<hr>
+                                            Last Hits:<br>{{match.lastHits}}
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="match-div"> 
+                                        <h3>
+                                            HeroDamage:<br>{{match.heroDamage}}<br>
+                                            <hr>TowerDamage:<br>{{match.towerDamage}}<hr>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-card>
+                        <span>&nbsp;</span>
+                    </div>
+                </ng-template>
+              </ngb-carousel>
+        </div>
+    </div>
+
+    <div class="row header-row">
+        <div class="col-md-12">
+            <span class="header-span">
+                Heroes
+            </span>
+        </div>
+    </div>
+
 </div>

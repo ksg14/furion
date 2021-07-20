@@ -12,14 +12,12 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class UserAuthService {
 
   private userAuthUrl: string = environment.usersApiUrl;;
-  private isAuthenticated: boolean = false;
 
   constructor(private http: HttpClient, private firebaseAuth: AngularFireAuth) {}
 
   public async loginUserOnFirebase (email: string, password: string): Promise<ServiceStatus> {
     try {
       const res = await this.firebaseAuth.signInWithEmailAndPassword (email, password);
-      this.isAuthenticated = true;
       localStorage.setItem ('email', email);
     }
     catch (err) {
@@ -31,7 +29,6 @@ export class UserAuthService {
   public async registerUserOnFirebase (email: string, password: string): Promise<ServiceStatus> {
     try {
       const res = await this.firebaseAuth.createUserWithEmailAndPassword (email, password);
-      this.isAuthenticated = true;
       localStorage.setItem ('email', email);
     }
     catch (err) {
@@ -40,14 +37,16 @@ export class UserAuthService {
     return new ServiceStatus (true, '');
   }
 
-  public logout () {
-    this.isAuthenticated = false;
-    this.firebaseAuth.signOut ();
-    localStorage.removeItem('email');
+  public isAuthenticated () {
+    console.log (localStorage);
+    if (localStorage && localStorage.getItem ('email'))
+      return true;
+    return false;
   }
 
-  public getAuthenticationStatus(): boolean {
-    return this.isAuthenticated;
+  public logout () {
+    this.firebaseAuth.signOut ();
+    localStorage.removeItem('email');
   }
 
   public getUserFromDB (email: string): Observable<HttpResponse<User>> {

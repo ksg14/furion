@@ -5,6 +5,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,12 +16,14 @@ import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth.guard';
 import { environment } from '../environments/environment'
 import { GameInfoService } from './game-info.service';
+import { NavigationComponent } from './navigation/navigation.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AuthComponent,
-    HomeComponent
+    HomeComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,8 @@ import { GameInfoService } from './game-info.service';
     ReactiveFormsModule,
     HttpClientModule,
     AngularFireModule.initializeApp (environment.firebase),
-    NgxChartsModule
+    NgxChartsModule,
+    NgbModule
   ],
   providers: [
     UserAuthService,

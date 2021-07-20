@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
   user!: User;
 
   winLossData: any[] | undefined = undefined;
-  winLossView: [number, number] = [ 200, 400 ];
+  winLossView: [number, number] = [ 200, 300 ];
   winLossGradient: boolean = true;
   winLossShowLegend: boolean = true;
   winLossShowLabels: boolean = true;
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   };
 
   laneWinsData: any[] | undefined = undefined;
-  laneWinsView: [number, number] = [ 400, 400 ];
+  laneWinsView: [number, number] = [ 400, 300 ];
   laneWinsGradient: boolean = true;
   laneWinsShowLegend: boolean = true;
   laneWinsShowLabels: boolean = true;
@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
   };
 
   laneGamesData: any[] | undefined = undefined;
-  laneGamesView: [number, number] = [ 400, 400 ];
+  laneGamesView: [number, number] = [ 400, 300 ];
   laneGamesGradient: boolean = true;
   laneGamesShowLegend: boolean = true;
   laneGamesShowLabels: boolean = true;
@@ -84,25 +84,30 @@ export class HomeComponent implements OnInit {
 
           if (!this.isErrorStatus (userResponse.status) && userResponse.body) {
             this.user = userResponse.body;
-            // this.gameService.getPlayerDetails (this.user.steam32ID)
-            //     .subscribe (detailsResponse => {
-            //       console.log (`details response ${detailsResponse.status}`);
-            //       console.log (detailsResponse.body);
+            this.gameService.getPlayerDetails (this.user.steam32ID)
+                .subscribe (detailsResponse => {
+                  console.log (`details response ${detailsResponse.status}`);
+                  console.log (detailsResponse.body);
 
-            //         if (!this.isErrorStatus (detailsResponse.status) && detailsResponse.body) {
-            //           this.playerDetails = detailsResponse.body;
-            //         }
-            //         else {
-            //           this.openSnackBar (`Failure : Mongo Load Game Details`, 'Close');
-            //         }
-            //     },
-            //     err => {
-            //       this.openSnackBar (`${err.statusText}, StatusCode : ${err.status}`, 'Close');
-            //     });
-            this.playerDetails = this.gameService.getDummyData ();
-            this.loadWinLossData ();
-            this.loadLaneWinsData ();
-            this.loadLaneGamesData ();
+                    if (!this.isErrorStatus (detailsResponse.status) && detailsResponse.body) {
+                      this.playerDetails = detailsResponse.body;
+                      this.loadWinLossData ();
+                      this.loadLaneWinsData ();
+                      this.loadLaneGamesData ();
+                    }
+                    else {
+                      this.openSnackBar (`Failure : Mongo Load Game Details`, 'Close');
+                    }
+                },
+                err => {
+                  this.openSnackBar (`${err.statusText}, StatusCode : ${err.status}`, 'Close');
+                });
+                
+            // TODO remove comments for dummyData
+            // this.playerDetails = this.gameService.getDummyData ();
+            // this.loadWinLossData ();
+            // this.loadLaneWinsData ();
+            // this.loadLaneGamesData ();
 
             this.gameService.getRecentMatches (this.user.steam32ID)
                 .subscribe (matchResponse => {

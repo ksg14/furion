@@ -1,16 +1,14 @@
 
 #player-summary {
-    height: 470px;
+    height: auto;
     width: auto;
     padding: 10px;
     margin: 10px;
 }
 
 #alias-card {
-    /* height: 300px; */
     width: 100%;
     text-align: center;
-    font-size: 40px;
     font-family: Arial, Helvetica, sans-serif;
     background: linear-gradient(to right, #f32170,
             #ff6b08, #cf23cf, #eedd44);
@@ -19,11 +17,9 @@
 }
 
 #mmr-card {
-    /* height: 300px; */
     width: 100%;
     padding-top: 10px;
     text-align: center;
-    font-size: 40px;
     font-family: Arial, Helvetica, sans-serif;
     margin: auto;
     background: linear-gradient(to right, #f32170,
@@ -33,27 +29,32 @@
 }
 
 #hero-summary {
-    /* height: 30%; */
 }
 
-#match-summary-row {
-    overflow: auto;
-    height: 400px;
+.header-row {
+    height: auto;
     width: auto;
     padding: 10px;
     margin: 10px;
+    color: white;
+    font-size: x-large;
 }
 
-#match-summary-div {
+.match-summary-row {
     height: auto;
     width: auto;
     padding: 10px;
     margin: 10px;
 }
 
+.match-summary-div {
+    height: auto;
+    width: 80%;
+    padding: 10px;
+    margin: auto;
+}
+
 .match-div {
-    /* overflow: auto; */
-    /* height: 300px; */
     width: auto;
     padding: 10px;
     margin: 10px;
@@ -72,9 +73,23 @@
 
 .match-card {
     height: auto;
+    width: auto;
     padding: 10px;
-    margin: 10px;
+    margin: 20px;
 }
 
+.carousel-control-prev-icon {
+    background-image: url('../../assets/seta_prim.png');
+    padding: 10px;
+}
+.carousel-control-next-icon {
+    background-image: url('../../assets/seta_ult.png');
+    padding: 10px;
+}
+
+.header-span {
+    display: inline-flex;
+    align-items: center;
+}
 
 
