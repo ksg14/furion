@@ -41,7 +41,9 @@ public class LoggingFilter implements Filter {
                     res.getContentType());
 
         } catch (Exception err) {
-            System.out.printf ("Logging Filter Error: %s", err.toString());
+            // TODO catch IOException and ServletException separately
+            // TODO send HTTP error code
+            logger.error ("Logging Filter Error: {}", err.toString());
         }
     }
 }

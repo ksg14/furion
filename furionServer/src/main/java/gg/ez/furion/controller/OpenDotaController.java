@@ -1,7 +1,10 @@
 package gg.ez.furion.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import gg.ez.furion.filter.LoggingFilter;
 import gg.ez.furion.model.MatchDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,8 @@ import java.util.List;
 @RequestMapping("/api/dota")
 @CrossOrigin(origins = "http://localhost:4200")
 public class OpenDotaController {
+
+    private final static Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
 
     private static String openDotaUrl = "https://api.opendota.com/api/";
 
@@ -51,7 +56,7 @@ public class OpenDotaController {
                     countsResponse.get("lane_role").get(DotaConstants.getLaneRole("Jungle")).get("games").asInt()
                     );
         } catch (Exception err) {
-            System.out.printf("GET /api/dota/details/{steam32id} error %s", err.toString());
+            logger.error("GET /api/dota/details/{} {}", id,err.toString());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(response);
@@ -96,7 +101,7 @@ public class OpenDotaController {
                 ));
             }
         } catch (Exception err) {
-            System.out.printf("GET /api/dota/recentMatches/{steam32id} error %s", err.toString());
+            logger.error("GET /api/dota/recentMatches/{} error {}", id,err.toString());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(response);
