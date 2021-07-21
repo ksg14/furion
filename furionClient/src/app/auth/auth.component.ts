@@ -3,7 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
-import { UserAuthService } from '../user-auth.service';
+import { UserService } from '../user.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -20,13 +21,16 @@ export class AuthComponent implements OnInit {
 
   hidePassword : boolean = true;
 
-  constructor(private userService: UserAuthService, 
+  constructor(private userService: UserService,
+    private authService: AuthService,
     private router: Router,
     private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-    // TODO if local storage has email then navigate to home
+    if (this.authService.isAuthenticated ()) {
+      this.navigateToHome ();
+    }
   }
 
   getEmailErrorMessage() {
@@ -80,64 +84,76 @@ export class AuthComponent implements OnInit {
     this.router.navigateByUrl('/home');
   }
 
-  userRegister () {
+  async userRegister () {
     console.log ('register');
     console.log (this.loginForm.value);
 
-    this.userService.saveUserOnDB (this.loginForm.value)
-        .subscribe (async res => {
-          console.log (`register response ${res.status}`);
-          console.log (res.body);
-
-          if (!this.isErrorStatus (res.status)) {
-            const firebaseResponse = await this.userService.registerUserOnFirebase (this.loginForm.controls ['email'].value, 
+    try {
+      await this.authService.registerUserOnFirebase (this.loginForm.controls ['email'].value, 
                                                       this.loginForm.controls ['password'].value);
-            if (firebaseResponse.status) {
-              this.navigateToHome ();
-            }
-            else {
-              this.openSnackBar (`Failure : Firebase Registration`, 'Close');
-              // TODO remove user from mongoDB on firebase failure
-            }
-          }
-          else {
-            this.openSnackBar (`Failure : Mongo Registration`, 'Close');
-          }
-        },
-        err => {
-          this.openSnackBar (`${err.statusText}, StatusCode : ${err.status}`, 'Close');
-        });
+
+      const token = await this.authService.getToken ();
+      console.log (`token : ${token}`);
+
+      if (token) {
+        this.userService.saveUserOnDB (this.loginForm.value, token)
+            .subscribe (mongoResponse => {
+              console.log (`register response ${mongoResponse.status}`);
+              console.log (mongoResponse.body);
+  
+              if (!this.isErrorStatus (mongoResponse.status)) {
+                this.authService.saveEmailAndTokenToLocalStorage (this.loginForm.controls ['email'].value, token);
+                this.navigateToHome ();
+              }
+              else {
+                this.openSnackBar (`Failure : MongoDB Registration`, 'Close');
+              }
+            },
+            err => {
+              this.openSnackBar (`Failure : MongoDB Registration`, 'Close');
+            });
+      }
+      else {
+        this.openSnackBar ('Failure : No Firebase Token', 'Close');
+      }
+    } catch (err) {
+        this.openSnackBar (`Failure : Firebase Registration`, 'Close');
+      }
   }
 
-  userLogin () {
+  async userLogin () {
     console.log ('login');
     console.log (this.loginForm.value);
+    
+    try {
+      await this.authService.loginUserOnFirebase (this.loginForm.controls ['email'].value, 
+                                                  this.loginForm.controls ['password'].value);
+      
+      const token = await this.authService.getToken ();
+      console.log (`token ${token}`);
 
-    this.userService.isExistingUserOnDB (this.loginForm.controls ['email'].value)
+      if (token) {
+        this.userService.isExistingUserOnDB (this.loginForm.controls ['email'].value, token)
         .subscribe (async res => {
           console.log (`login response ${res.status}`);
           console.log (res.body);
 
           if (!this.isErrorStatus (res.status) && res.body) {
-            const firebaseResponse = await this.userService.loginUserOnFirebase (this.loginForm.controls ['email'].value, 
-                                                      this.loginForm.controls ['password'].value);
-            if (firebaseResponse.status) {
-              this.navigateToHome ();
-            }
-            else {
-              this.openSnackBar (`Failure : Firebase Login`, 'Close');
-            }
+            this.authService.saveEmailAndTokenToLocalStorage (this.loginForm.controls ['email'].value ,token);
+            this.navigateToHome ();
           }
           else {
             this.openSnackBar (`Failure : Mongo Login`, 'Close');
           }
         },
         err => {
-          this.openSnackBar (`${err.statusText}, StatusCode : ${err.status}`, 'Close');
-        })
+          this.openSnackBar (`Failure : Mongo Login`, 'Close');
+        });
+      }
+    } catch (err) {
+      this.openSnackBar ('Failure : Firebase Login', 'Close');
+    }
+
   }
-
-
-  
 
 }

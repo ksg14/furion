@@ -15,12 +15,21 @@ export class GameInfoService {
 
   constructor(private http: HttpClient) { }
 
-  public getPlayerDetails (steam32ID: number): Observable<HttpResponse<PlayerDetails>> {
-    return this.http.get<PlayerDetails>(`${this.dotaApiUrl}/details/${steam32ID}`, {observe: 'response'});
+  private makeHeader (token: string) {
+    const headers = {
+      'Authorization': `Bearer ${token}`
+    }
+    return headers
   }
 
-  public getRecentMatches (steam32ID: number): Observable<HttpResponse<MatchDetails []>> {
-    return this.http.get<MatchDetails []>(`${this.dotaApiUrl}/recentMatches/${steam32ID}`, {observe: 'response'});
+  public getPlayerDetails (steam32ID: number, token: string): Observable<HttpResponse<PlayerDetails>> {
+    return this.http.get<PlayerDetails>(`${this.dotaApiUrl}/details/${steam32ID}`, 
+                                          { headers: this.makeHeader (token), observe: 'response'} );
+  }
+
+  public getRecentMatches (steam32ID: number, token: string): Observable<HttpResponse<MatchDetails []>> {
+    return this.http.get<MatchDetails []>(`${this.dotaApiUrl}/recentMatches/${steam32ID}`, 
+                                          { headers: this.makeHeader (token), observe: 'response'} );
   }
 
   public getDummyData () {
@@ -63,9 +72,5 @@ export class GameInfoService {
       }
     ]
   };
-
-  // public saveUserOnDB (user: User): Observable<HttpResponse<string>>{
-  //   return this.http.post<string>(this.userAuthUrl, user, {observe: 'response'});
-  // }
-
+  
 }

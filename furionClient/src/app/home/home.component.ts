@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from '../auth.service';
 import { GameInfoService } from '../game-info.service';
 import { MatchDetails } from '../match-details';
 import { PlayerDetails } from '../player-details';
 import { User } from '../user';
-import { UserAuthService } from '../user-auth.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-home',
@@ -48,16 +49,14 @@ export class HomeComponent implements OnInit {
   };
 
   constructor(private gameService: GameInfoService,
-    private userService: UserAuthService,
+    private userService: UserService,
+    private authService: AuthService,
     private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
-    console.log (localStorage.getItem("email"))
-    
-    if (localStorage.getItem("email") != null) {
-      this.loadPlayerDetails (localStorage.getItem("email")!);
+    if (this.authService.isAuthenticated ()) {
+      this.loadPlayerDetails (localStorage.getItem("email")!, localStorage.getItem("token")!);
     }
-    
   }
 
   convertToMinutes (duration: number) {
@@ -76,15 +75,15 @@ export class HomeComponent implements OnInit {
     return false;
   }
 
-  loadPlayerDetails (email: string) {
-    this.userService.getUserFromDB (email)
+  loadPlayerDetails (email: string, token: string) {
+    this.userService.getUserFromDB (email, token)
         .subscribe (userResponse => {
           console.log (`user response ${userResponse.status}`);
           console.log (userResponse.body);
 
           if (!this.isErrorStatus (userResponse.status) && userResponse.body) {
             this.user = userResponse.body;
-            this.gameService.getPlayerDetails (this.user.steam32ID)
+            this.gameService.getPlayerDetails (this.user.steam32ID, token)
                 .subscribe (detailsResponse => {
                   console.log (`details response ${detailsResponse.status}`);
                   console.log (detailsResponse.body);
@@ -109,7 +108,7 @@ export class HomeComponent implements OnInit {
             // this.loadLaneWinsData ();
             // this.loadLaneGamesData ();
 
-            this.gameService.getRecentMatches (this.user.steam32ID)
+            this.gameService.getRecentMatches (this.user.steam32ID, token)
                 .subscribe (matchResponse => {
                   console.log (`match response ${matchResponse.status}`);
                   console.log (matchResponse.body);

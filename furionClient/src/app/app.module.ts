@@ -11,12 +11,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthComponent } from './auth/auth.component';
 import { MaterialModule } from './material/material.module';
-import { UserAuthService } from './user-auth.service';
+import { UserService } from './user.service';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './auth.guard';
 import { environment } from '../environments/environment'
 import { GameInfoService } from './game-info.service';
 import { NavigationComponent } from './navigation/navigation.component';
+import { AuthService } from './auth.service';
 
 @NgModule({
   declarations: [
@@ -38,9 +39,10 @@ import { NavigationComponent } from './navigation/navigation.component';
     NgbModule
   ],
   providers: [
-    UserAuthService,
+    UserService,
     AuthGuard,
-    GameInfoService
+    GameInfoService,
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

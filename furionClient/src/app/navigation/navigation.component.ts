@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { UserAuthService } from '../user-auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-navigation',
@@ -12,12 +12,12 @@ export class NavigationComponent implements OnInit {
   public showLogoutButton: boolean = false;
 
   constructor(private router: Router,
-    private userService: UserAuthService) { }
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        this.showLogoutButton = this.userService.isAuthenticated ();
+        this.showLogoutButton = this.authService.isAuthenticated ();
       }
     })
   }
@@ -27,7 +27,7 @@ export class NavigationComponent implements OnInit {
   }
 
   logout () {
-    this.userService.logout ();
+    this.authService.logout ();
     this.navigateToLogin ();
   }
 }
