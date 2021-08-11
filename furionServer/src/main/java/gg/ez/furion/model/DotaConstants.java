@@ -34,6 +34,10 @@ public class DotaConstants {
         heros.put (52, "Leshrac");
         heros.put (1, "Anti Mage");
         heros.put (26, "Lion");
+        heros.put (27, "Shadow Shaman");
+        heros.put (112, "Winter Wyvern");
+        heros.put (75, "Silencer");
+        heros.put (12, "Phantom Lancer");
     }
 
     public static String getRank (int rank) {
